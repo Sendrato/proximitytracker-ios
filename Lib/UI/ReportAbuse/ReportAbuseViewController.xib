@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ReportAbuseViewController" customModule="LifeshareSDK" customModuleProvider="target">
+            <connections>
+                <outlet property="label" destination="g2Z-hZ-rLd" id="XAg-Qz-v4h"/>
+                <outlet property="messageText" destination="vlW-GC-6Ln" id="e5Y-hu-UPR"/>
+                <outlet property="optionPicker" destination="GpP-I7-Dir" id="cmp-hY-LqU"/>
+                <outlet property="scrollView" destination="hmC-45-haG" id="rcJ-e9-aWA"/>
+                <outlet property="view" destination="LUy-hE-39Z" id="avd-YG-AJS"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="LUy-hE-39Z">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" directionalLockEnabled="YES" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" contentInsetAdjustmentBehavior="scrollableAxes" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hmC-45-haG" customClass="TPKeyboardAvoidingScrollView">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y2m-ES-AhQ">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="441"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" axis="vertical" distribution="equalSpacing" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="WnA-Bi-wgv">
+                                    <rect key="frame" x="32" y="0.0" width="350" height="441"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Select the reason why you report this content" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g2Z-hZ-rLd">
+                                            <rect key="frame" x="0.0" y="0.0" width="350" height="17"/>
+                                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GpP-I7-Dir">
+                                            <rect key="frame" x="0.0" y="21" width="350" height="216"/>
+                                        </pickerView>
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vlW-GC-6Ln" customClass="UIPlaceholderTextView">
+                                            <rect key="frame" x="0.0" y="241" width="350" height="200"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="200" id="f0K-ji-qGo"/>
+                                            </constraints>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences" enablesReturnKeyAutomatically="YES"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Please clarify your choice here"/>
+                                            </userDefinedRuntimeAttributes>
+                                        </textView>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="WnA-Bi-wgv" secondAttribute="bottom" id="A7c-Ko-NSJ"/>
+                                <constraint firstItem="WnA-Bi-wgv" firstAttribute="leading" secondItem="Y2m-ES-AhQ" secondAttribute="leading" constant="32" id="Czn-DY-rpv"/>
+                                <constraint firstItem="WnA-Bi-wgv" firstAttribute="top" secondItem="Y2m-ES-AhQ" secondAttribute="top" id="UPK-Ar-yJ9"/>
+                                <constraint firstAttribute="trailing" secondItem="WnA-Bi-wgv" secondAttribute="trailing" constant="32" id="joE-Up-QDY"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="Y2m-ES-AhQ" secondAttribute="bottom" id="AHo-Rp-Ajh"/>
+                        <constraint firstItem="Y2m-ES-AhQ" firstAttribute="width" secondItem="hmC-45-haG" secondAttribute="width" id="HSP-1k-ORo"/>
+                        <constraint firstAttribute="trailing" secondItem="Y2m-ES-AhQ" secondAttribute="trailing" id="VFX-TK-qIr"/>
+                        <constraint firstItem="Y2m-ES-AhQ" firstAttribute="leading" secondItem="hmC-45-haG" secondAttribute="leading" id="Zuf-vN-eeS"/>
+                        <constraint firstItem="Y2m-ES-AhQ" firstAttribute="top" secondItem="hmC-45-haG" secondAttribute="top" id="m6a-vH-2hg"/>
+                    </constraints>
+                </scrollView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="hmC-45-haG" firstAttribute="top" secondItem="LUy-hE-39Z" secondAttribute="top" id="DxF-kJ-fco"/>
+                <constraint firstItem="hmC-45-haG" firstAttribute="leading" secondItem="LUy-hE-39Z" secondAttribute="leading" id="JJ3-oF-QUm"/>
+                <constraint firstAttribute="bottom" secondItem="hmC-45-haG" secondAttribute="bottom" id="Oqi-fY-Ted"/>
+                <constraint firstAttribute="trailing" secondItem="hmC-45-haG" secondAttribute="trailing" id="SNP-fv-D3Z"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="ZxO-1W-EfZ"/>
+            <point key="canvasLocation" x="140.57971014492756" y="137.94642857142856"/>
+        </view>
+    </objects>
+</document>
