@@ -9,35 +9,23 @@
 import Foundation
 
 class Registry {
-    typealias Token = UUID
 
-    struct Entry: Codable {
-        struct Location: Codable {
-            let lat, long: Double
-        }
-        var uuid: Token
-        var location: Location
-    }
-
-    // todo make threadsafe
-    var pending: [Entry]
-
-    var tokens: [Token]
+    var pending: [TracingCrypto.RollingProximityIdentifier]
 
     init() {
         pending = []
-        tokens = []
     }
 
-    func add(entry: Entry) {
+    func add(entry: TracingCrypto.RollingProximityIdentifier) {
         pending.append(entry)
     }
 
-    func add(token: Token) {
-        tokens.append(token)
-    }
+    func flush() {
+        let store = pending
+        pending = []
 
-    func newToken() -> Token {
-        return Token()
+        let fm = FileManager()
+        
+        /// Store on disk
     }
 }

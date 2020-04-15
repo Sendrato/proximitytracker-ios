@@ -13,11 +13,16 @@ class MainViewModel {
 
     var joinAction: Action<(), (), Error>
 
+    var tracking: Property<Bool>
+
     init() {
+        let tracker = Tracker.main
         joinAction = Action(execute: { _ in
-            let tracker = Tracker.main
+            tracker.join()
             return .empty
         })
+
+        tracking = Property(tracker.tracking)
     }
 
 }

@@ -15,75 +15,129 @@ import os
 
 class Tracker: NSObject {
 
-    struct TransferService {
-        static let serviceUUID = CBUUID(string: "E20A39F4-73F5-4BC4-A12F-17D1AD07A961")
-        static let characteristicUUID = CBUUID(string: "08590F7E-DB05-467E-8757-72F6FAEB13D4")
-    }
+    static let serviceUUID = CBUUID(string: "FD6F")
+    static let startDatedefaultKey = "com.dexels.proximitytracker.startdate"
 
     static let proximityRSSIThreshold: Float = -70.0
+    static let calendar = Calendar(identifier: .gregorian)
 
+    static let main = Tracker()
+
+    private let tracingCrypto: TracingCrypto
     private var centralManager: CBCentralManager!
     private var peripheralManager: CBPeripheralManager!
     private var locationManager: CLLocationManager
 
     private var queue: DispatchQueue
-    private var uuid: CBUUID
     private var registry = Registry()
-
-    var lastLocation: CLLocation?
 
     var peripherals: [UUID: CBPeripheral]
 
-    let characteristic = CBMutableCharacteristic(type: TransferService.characteristicUUID, properties: [.notify, .writeWithoutResponse], value: nil, permissions: [.readable, .writeable])
+    let joined = MutableProperty<Bool>(false)
+    let tracking = MutableProperty<Bool>(false)
 
-    let service = CBMutableService(type: TransferService.serviceUUID, primary: true)
+    let lastLocation = MutableProperty<CLLocation?>(nil)
+
+
+    let startDate: Date
 
     override init() {
         queue = DispatchQueue(label: "tracker", qos: .background, attributes: [])
 
-//        uuid = CBUUID(string: "0000180F-0000-1000-8000-00805F9B34FB")
-        uuid = CBUUID(string: "39ED98FF-2900-441A-802F-9C398FC199D2")
+        tracingCrypto = try! TracingCrypto()
         peripherals = [:]
         locationManager = CLLocationManager()
 
+        startDate = Self.getStartDate()
+
         super.init()
+
         centralManager = CBCentralManager(delegate: self, queue: queue)
         peripheralManager = CBPeripheralManager(delegate: self, queue: queue)
         locationManager.delegate = self
-        service.characteristics = [characteristic]
     }
 
-    static let main = Tracker()
+    static func getStartDate() -> Date {
+        var startDate = UserDefaults.standard.double(forKey: startDatedefaultKey)
+        if startDate == 0 {
+            startDate = Date().timeIntervalSince1970
+            UserDefaults.standard.set(startDate, forKey: startDatedefaultKey)
+        }
+        return Date(timeIntervalSince1970: startDate)
+    }
 
-    func startBroadcastingTokens() {
-
-        SignalProducer
-            .timer(interval: .seconds(30), on: QueueScheduler())
-            .take(duringLifetimeOf: self)
-            .start { event in
-                switch event {
-                case .value(let date):
-                    self.broadcastToken()
-                default:
-                    ()
-                }
+    public func join() {
+        joined.value = true
+        if centralManager.state == .poweredOn &&
+            peripheralManager.state == .poweredOn {
+            try startTracking()
         }
     }
 
-    func broadcastToken() {
-        let token = registry.newToken()
-        guard let data = try? JSONEncoder().encode(token) else {
-            return
-        }
-        if let loc = lastLocation {
-            registry.add(entry: Registry.Entry(uuid: token, location: Registry.Entry.Location(lat: loc.coordinate.latitude, long: loc.coordinate.longitude)))
-        }
+    public func unjoin() {
+        joined.value = false
+        stopTracking()
+    }
 
-        for (id, peripheral) in peripherals {
-            centralManager.connect(peripheral, options: nil)
-            // peripheral.writeValue(data, for: char, type: .withoutResponse)
-            // peripheral.writeValue(data, for: CBDescriptor)
+    private func day(date: Date) -> Int {
+        return Self.calendar.dateComponents([.day], from: startDate, to: date).day ?? 0
+    }
+
+    private func tin(date: Date) -> UInt {
+        let components = Self.calendar.dateComponents([.hour, .minute, .second], from: date)
+        return (((components.second ?? 0) + (components.minute ?? 0) * 60 + (components.hour ?? 0) * 3600) as Int) / 12
+    }
+
+    private func startTracking() throws {
+        if !tracking.value {
+            tracking.value = true
+            centralManager.scanForPeripherals(withServices: nil, options: nil)
+            locationManager.startMonitoringSignificantLocationChanges()
+
+            let date = Date()
+            let identifier = try tracingCrypto.rollingProximityIdentifier(day: day(date: date), tin: tin(date: date))
+            let advertisementData: [String: Any] = [
+                CBAdvertisementDataServiceUUIDsKey: [Self.serviceUUID],
+                CBAdvertisementDataServiceDataKey: identifier
+            ]
+            peripheralManager.startAdvertising(advertisementData)
+
+            SignalProducer
+                       .timer(interval: .seconds(30), on: QueueScheduler())
+                       .take(duringLifetimeOf: self)
+                       .start { event in
+                           switch event {
+                           case .value(let date):
+                               self.broadcastToken()
+                           default:
+                               ()
+                           }
+                   }
         }
+    }
+
+    private func roll() {
+        if !tracking.value {
+                   tracking.value = true
+                   centralManager.scanForPeripherals(withServices: nil, options: nil)
+                   locationManager.startMonitoringSignificantLocationChanges()
+
+                   let date = Date()
+                   let identifier = try tracingCrypto.rollingProximityIdentifier(day: day(date: date), tin: tin(date: date))
+                   let advertisementData: [String: Any] = [
+                       CBAdvertisementDataServiceUUIDsKey: [Self.serviceUUID]
+                       CBAdvertisementDataServiceDataKey: identifier
+                   ]
+                   peripheralManager.startAdvertising(advertisementData)
+                   startBroadcastingTokens()
+               }
+    }
+
+    private func stopTracking() {
+        tracking.value = false
+        centralManager.stopScan()
+        peripheralManager.stopAdvertising()
+//        stopBroadcasting()
     }
 }
 
@@ -91,10 +145,9 @@ extension Tracker: CBCentralManagerDelegate {
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
 
-        if central.state == .poweredOn {
+        if joined.value && central.state == .poweredOn {
             print("Bluetooth is On")
-            central.scanForPeripherals(withServices: nil, options: nil)
-            locationManager.startMonitoringSignificantLocationChanges()
+            startTracking()
         } else {
             print("Bluetooth is not active")
         }
@@ -128,31 +181,15 @@ extension Tracker: CBCentralManagerDelegate {
 }
 
 extension Tracker: CBPeripheralManagerDelegate {
-    func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
-        if peripheralManager.state == .poweredOn {
-            peripheralManager.startAdvertising([CBAdvertisementDataServiceUUIDsKey: [TransferService.serviceUUID]])
+    func peripheralManagerDidUpdateState(_ peripheralManager: CBPeripheralManager) {
+        if joined.value && peripheralManager.state == .poweredOn {
+            startTracking()
         }
-    }
-
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        if let error = error {
-            os_log("Error discovering characteristics: %s", error.localizedDescription)
-            return
-        }
-
-        guard let characteristicData = characteristic.value,
-            let token = try? JSONDecoder().decode(Registry.Token.self, from: characteristicData) else {
-                return
-        }
-
-        os_log("Received %d bytes: %s", characteristicData.count, token.uuidString)
-        self.registry.add(token: token)
     }
 }
 
 extension Tracker: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        lastLocation = locations.last
+        lastLocation.value = locations.last
     }
-
 }

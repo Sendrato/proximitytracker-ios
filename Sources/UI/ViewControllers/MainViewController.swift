@@ -8,6 +8,7 @@
 
 import UIKit
 import ReactiveCocoa
+import ReactiveSwift
 
 class MainView: UIView {
     let button: UIButton
@@ -40,6 +41,11 @@ class MainViewController: UIViewController {
         view = mainView
 
         mainView.button.reactive.pressed = CocoaAction(viewModel.joinAction)
+        mainView.button.backgroundColor = .red
+        mainView.button.reactive.backgroundColor <~ viewModel.tracking.map({ tracking in
+           return tracking ? UIColor.green : UIColor.red
+        })
+
     }
 
     override func viewDidLoad() {

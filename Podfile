@@ -8,7 +8,8 @@ target 'Rid Covid 19' do
 
   pod 'ReactiveSwift'
   pod 'ReactiveCocoa'
-
+  pod 'CryptoSwift'
+  
   # Pods for Rid Covid 19
 
   target 'Rid Covid 19Tests' do

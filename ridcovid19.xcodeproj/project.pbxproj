@@ -37,6 +37,7 @@
 		E0CBE5762444877700B8E630 /* NSLayoutConstraint+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CBE5752444877700B8E630 /* NSLayoutConstraint+Convenience.swift */; };
 		E0CBE578244487B300B8E630 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CBE577244487B300B8E630 /* Theme.swift */; };
 		E0CBE57A244489D600B8E630 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CBE579244489D600B8E630 /* MainViewModel.swift */; };
+		E0CBE5C12446E29A00B8E630 /* TracingCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CBE5C02446E29A00B8E630 /* TracingCrypto.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +104,7 @@
 		E0CBE5752444877700B8E630 /* NSLayoutConstraint+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NSLayoutConstraint+Convenience.swift"; path = "UI/NSLayoutConstraint+Convenience.swift"; sourceTree = "<group>"; };
 		E0CBE577244487B300B8E630 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Theme.swift; path = UI/Theme.swift; sourceTree = "<group>"; };
 		E0CBE579244489D600B8E630 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		E0CBE5C02446E29A00B8E630 /* TracingCrypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TracingCrypto.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,6 +238,7 @@
 			children = (
 				E082155624447C1300A28314 /* Tracker.swift */,
 				E082155E2444806700A28314 /* Registry.swift */,
+				E0CBE5C02446E29A00B8E630 /* TracingCrypto.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -531,6 +534,7 @@
 				E0CBE5702444870D00B8E630 /* ReactiveAnimation.swift in Sources */,
 				E0CBE5712444870D00B8E630 /* UICollectionView-Swift.swift in Sources */,
 				E0CBE5682444842600B8E630 /* Pill.swift in Sources */,
+				E0CBE5C12446E29A00B8E630 /* TracingCrypto.swift in Sources */,
 				E0CBE5762444877700B8E630 /* NSLayoutConstraint+Convenience.swift in Sources */,
 				E0CBE57A244489D600B8E630 /* MainViewModel.swift in Sources */,
 				E0CBE578244487B300B8E630 /* Theme.swift in Sources */,
