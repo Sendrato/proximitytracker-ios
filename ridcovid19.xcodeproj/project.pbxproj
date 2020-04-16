@@ -17,9 +17,8 @@
 		E082154324447AAE00A28314 /* Rid_Covid_19UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E082154224447AAE00A28314 /* Rid_Covid_19UITests.swift */; };
 		E082155224447B4700A28314 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E082155124447B4700A28314 /* MapKit.framework */; };
 		E082155724447C1300A28314 /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E082155624447C1300A28314 /* Tracker.swift */; };
-		E082155924447E5F00A28314 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E082155824447E5F00A28314 /* LogViewController.swift */; };
-		E082155D24447E9200A28314 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E082155C24447E9200A28314 /* Default-568h@2x.png */; };
 		E082155F2444806700A28314 /* Registry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E082155E2444806700A28314 /* Registry.swift */; };
+		E09F5A8324484ADB00813E87 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E09F5A8224484ADB00813E87 /* Launch Screen.storyboard */; };
 		E0CBE55D2444842600B8E630 /* UIView+fromNib.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CBE5512444842600B8E630 /* UIView+fromNib.swift */; };
 		E0CBE55E2444842600B8E630 /* StackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CBE5522444842600B8E630 /* StackView.swift */; };
 		E0CBE55F2444842600B8E630 /* UITableView-Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CBE5532444842600B8E630 /* UITableView-Swift.swift */; };
@@ -80,9 +79,8 @@
 		E082154424447AAE00A28314 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E082155124447B4700A28314 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		E082155624447C1300A28314 /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
-		E082155824447E5F00A28314 /* LogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
-		E082155C24447E9200A28314 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		E082155E2444806700A28314 /* Registry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Registry.swift; sourceTree = "<group>"; };
+		E09F5A8224484ADB00813E87 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		E0CBE5512444842600B8E630 /* UIView+fromNib.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+fromNib.swift"; path = "UI/Views/UIView+fromNib.swift"; sourceTree = "<group>"; };
 		E0CBE5522444842600B8E630 /* StackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StackView.swift; path = UI/Views/StackView.swift; sourceTree = "<group>"; };
 		E0CBE5532444842600B8E630 /* UITableView-Swift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UITableView-Swift.swift"; path = "UI/Views/UITableView-Swift.swift"; sourceTree = "<group>"; };
@@ -216,10 +214,10 @@
 		E082155324447BA000A28314 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				E082155C24447E9200A28314 /* Default-568h@2x.png */,
 				E082152024447AAC00A28314 /* AppDelegate.swift */,
 				E082152924447AAD00A28314 /* Assets.xcassets */,
 				E082152E24447AAD00A28314 /* Info.plist */,
+				E09F5A8224484ADB00813E87 /* Launch Screen.storyboard */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -255,7 +253,6 @@
 			isa = PBXGroup;
 			children = (
 				E082152424447AAC00A28314 /* MainViewController.swift */,
-				E082155824447E5F00A28314 /* LogViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -353,6 +350,9 @@
 		E082151524447AAC00A28314 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				KnownAssetTags = (
+					New,
+				);
 				LastSwiftUpdateCheck = 1140;
 				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = Bitnomica;
@@ -398,7 +398,7 @@
 			files = (
 				E0CBE56A244485B600B8E630 /* Podfile in Resources */,
 				E082152A24447AAD00A28314 /* Assets.xcassets in Resources */,
-				E082155D24447E9200A28314 /* Default-568h@2x.png in Resources */,
+				E09F5A8324484ADB00813E87 /* Launch Screen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,7 +547,6 @@
 				E082152124447AAC00A28314 /* AppDelegate.swift in Sources */,
 				E0CBE5652444842600B8E630 /* View.swift in Sources */,
 				E0CBE5672444842600B8E630 /* PaddingView.swift in Sources */,
-				E082155924447E5F00A28314 /* LogViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -587,6 +586,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -647,6 +647,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -709,7 +710,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.dexels.ricovid19;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dexels.ridcovid19;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -728,7 +729,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.dexels.ricovid19;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dexels.ridcovid19;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

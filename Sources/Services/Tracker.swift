@@ -9,13 +9,14 @@
 import Foundation
 import CoreBluetooth
 import CoreLocation
-
 import ReactiveSwift
 import os
 
 class Tracker: NSObject {
 
+//    static let serviceUUID = CBUUID(string: "0000FD6F-0000-1000-8000-00805F9B34FB")
     static let serviceUUID = CBUUID(string: "FD6F")
+
     static let startDatedefaultKey = "com.dexels.proximitytracker.startdate"
 
     static let proximityRSSIThreshold: Float = -70.0
@@ -26,27 +27,20 @@ class Tracker: NSObject {
     private let tracingCrypto: TracingCrypto
     private var centralManager: CBCentralManager!
     private var peripheralManager: CBPeripheralManager!
-    private var locationManager: CLLocationManager
 
     private var queue: DispatchQueue
     private var registry = Registry()
 
-    var peripherals: [UUID: CBPeripheral]
-
     let joined = MutableProperty<Bool>(false)
     let tracking = MutableProperty<Bool>(false)
 
-    let lastLocation = MutableProperty<CLLocation?>(nil)
-
-
+    let status = MutableProperty<String>("")
     let startDate: Date
 
     override init() {
         queue = DispatchQueue(label: "tracker", qos: .background, attributes: [])
 
         tracingCrypto = try! TracingCrypto()
-        peripherals = [:]
-        locationManager = CLLocationManager()
 
         startDate = Self.getStartDate()
 
@@ -54,7 +48,8 @@ class Tracker: NSObject {
 
         centralManager = CBCentralManager(delegate: self, queue: queue)
         peripheralManager = CBPeripheralManager(delegate: self, queue: queue)
-        locationManager.delegate = self
+
+        status.value = "Found \(self.registry.pending.count) tokens"
     }
 
     static func getStartDate() -> Date {
@@ -70,7 +65,7 @@ class Tracker: NSObject {
         joined.value = true
         if centralManager.state == .poweredOn &&
             peripheralManager.state == .poweredOn {
-            try startTracking()
+            startTracking()
         }
     }
 
@@ -83,32 +78,27 @@ class Tracker: NSObject {
         return Self.calendar.dateComponents([.day], from: startDate, to: date).day ?? 0
     }
 
-    private func tin(date: Date) -> UInt {
+    private func tin(date: Date) -> Int {
         let components = Self.calendar.dateComponents([.hour, .minute, .second], from: date)
-        return (((components.second ?? 0) + (components.minute ?? 0) * 60 + (components.hour ?? 0) * 3600) as Int) / 12
+        let second: Int = components.second ?? 0
+        let minute: Int = components.minute ?? 0
+        let hour: Int = components.hour ?? 0
+        return ( second + minute * 60 + hour * 3600) / 300
     }
 
-    private func startTracking() throws {
+    private func startTracking() {
         if !tracking.value {
             tracking.value = true
-            centralManager.scanForPeripherals(withServices: nil, options: nil)
-            locationManager.startMonitoringSignificantLocationChanges()
+            centralManager.scanForPeripherals(withServices: [Self.serviceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
 
-            let date = Date()
-            let identifier = try tracingCrypto.rollingProximityIdentifier(day: day(date: date), tin: tin(date: date))
-            let advertisementData: [String: Any] = [
-                CBAdvertisementDataServiceUUIDsKey: [Self.serviceUUID],
-                CBAdvertisementDataServiceDataKey: identifier
-            ]
-            peripheralManager.startAdvertising(advertisementData)
-
+            roll(date: Date() )
             SignalProducer
                        .timer(interval: .seconds(30), on: QueueScheduler())
                        .take(duringLifetimeOf: self)
                        .start { event in
                            switch event {
                            case .value(let date):
-                               self.broadcastToken()
+                            self.roll(date: date)
                            default:
                                ()
                            }
@@ -116,28 +106,22 @@ class Tracker: NSObject {
         }
     }
 
-    private func roll() {
-        if !tracking.value {
-                   tracking.value = true
-                   centralManager.scanForPeripherals(withServices: nil, options: nil)
-                   locationManager.startMonitoringSignificantLocationChanges()
+    private func roll(date: Date) {
+        let identifier = try! tracingCrypto.rollingProximityIdentifier(day: day(date: date), tin: tin(date: date))
 
-                   let date = Date()
-                   let identifier = try tracingCrypto.rollingProximityIdentifier(day: day(date: date), tin: tin(date: date))
-                   let advertisementData: [String: Any] = [
-                       CBAdvertisementDataServiceUUIDsKey: [Self.serviceUUID]
-                       CBAdvertisementDataServiceDataKey: identifier
-                   ]
-                   peripheralManager.startAdvertising(advertisementData)
-                   startBroadcastingTokens()
-               }
+        let advertisementData: [String: Any] = [
+            CBAdvertisementDataServiceUUIDsKey: [Self.serviceUUID],
+
+            // This setting is currently not supported by CoreBluetooth.
+            CBAdvertisementDataServiceDataKey: [Self.serviceUUID.uuidString: identifier.data as NSData],
+        ]
+        peripheralManager.startAdvertising(advertisementData)
     }
 
     private func stopTracking() {
         tracking.value = false
         centralManager.stopScan()
         peripheralManager.stopAdvertising()
-//        stopBroadcasting()
     }
 }
 
@@ -163,20 +147,15 @@ extension Tracker: CBCentralManagerDelegate {
         for ad in advertisementData {
             print("AD Data: \(ad)")
         }
-//        for s in peripheral.services ?? [] {
-//            print("Service: \(s.characteristics)")
-//        }
 
-        self.peripherals[peripheral.identifier] = peripheral
-
-//        if rssi > Self.proximityRSSIThreshold {
-//            let entry = Registry.Entry(uuid: UUID(), location: .init(lat: 2.0, long: 3.0))
-//            self.registry.add(entry: entry)
-//        }
-    }
-
-    public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        peripherals.removeValue(forKey: peripheral.identifier)
+        if rssi > -50 {
+            if let data = advertisementData[CBAdvertisementDataServiceDataKey] as? Data {
+                print("Close by id: \(data)")
+                let identifier = TracingCrypto.RollingProximityIdentifier(id: data.bytes)
+                self.registry.add(entry: identifier)
+                status.value = "Found \(self.registry.pending.count) tokens"
+            }
+        }
     }
 }
 
@@ -185,11 +164,5 @@ extension Tracker: CBPeripheralManagerDelegate {
         if joined.value && peripheralManager.state == .poweredOn {
             startTracking()
         }
-    }
-}
-
-extension Tracker: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        lastLocation.value = locations.last
     }
 }

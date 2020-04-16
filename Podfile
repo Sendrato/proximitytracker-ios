@@ -20,5 +20,4 @@ target 'Rid Covid 19' do
   target 'Rid Covid 19UITests' do
     # Pods for testing
   end
-
 end

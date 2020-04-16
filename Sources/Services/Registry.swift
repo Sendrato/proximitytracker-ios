@@ -19,13 +19,4 @@ class Registry {
     func add(entry: TracingCrypto.RollingProximityIdentifier) {
         pending.append(entry)
     }
-
-    func flush() {
-        let store = pending
-        pending = []
-
-        let fm = FileManager()
-        
-        /// Store on disk
-    }
 }

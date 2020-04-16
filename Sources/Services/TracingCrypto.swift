@@ -15,12 +15,19 @@ class TracingCrypto {
         let tracingKey: [UInt8]
     }
 
-    typealias DailyTracingKey = HKDF
+    typealias DailyTracingKey = Array<UInt8>
 
-    struct RollingProximityIdentifier {
+    struct RollingProximityIdentifier: Hashable {
         let id: [UInt8]
+
+        var data: Data {
+            return Data(id)
+        }
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
     }
-    let tracingKey: TracingKey
 
     enum Error: Swift.Error {
         case couldNotStoreKey
@@ -29,12 +36,15 @@ class TracingCrypto {
         case invalidRollingProximityKey
     }
 
+    let tracingKey: TracingKey
+
+    static let keyChainTag = "com.dexels.proximtytracker"
+
     init() throws {
 
-        let tag = "com.dexels.proximtytracker".data(using: .utf8)!
+        let tag = Self.keyChainTag.data(using: .utf8)!
         let getQuery: [String: Any] = [kSecClass as String: kSecClassKey,
                                        kSecAttrApplicationTag as String: tag,
-                                       kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
                                        kSecReturnRef as String: true]
 
         var item: CFTypeRef?
@@ -44,17 +54,21 @@ class TracingCrypto {
 
             let addquery: [String: Any] = [kSecClass as String: kSecClassKey,
                                            kSecAttrApplicationTag as String: tag,
-                                           kSecValueRef as String: tracingKey.tracingKey.toBase64()!]
+                                           kSecValueRef as String: tracingKey.tracingKey.toHexString()]
+
             let status = SecItemAdd(addquery as CFDictionary, nil)
+
             guard status == errSecSuccess else {
-                throw Error.couldNotStoreKey
+                print("Could not save token")
+                //                throw Error.couldNotStoreKey
+                return 
             }
+
             return
         }
         let key = item as! String
         tracingKey = TracingKey(tracingKey: key.bytes)
     }
-
 
     public static func genTracingKey() throws -> TracingKey {
 
@@ -62,24 +76,40 @@ class TracingCrypto {
         let status = SecRandomCopyBytes(kSecRandomDefault, bytes.count, &bytes)
 
         if status == errSecSuccess { // Always test the status.
-            print(bytes)
             return TracingKey(tracingKey: bytes)
         }
         throw Error.invalidTracingKey
     }
 
+    private var dailyKeys = [Int: DailyTracingKey]()
+
     public func dailyTracingKey(day: Int) throws -> DailyTracingKey {
+        if let key = dailyKeys[day] {
+            return key
+        }
         let info: String = "CT-DTK\(day)"
-        return try CryptoSwift.HKDF(password: tracingKey.tracingKey, salt: nil, info: info.data(using: .utf8)!.bytes, keyLength: 16)
+        let key = try CryptoSwift.HKDF(password: tracingKey.tracingKey, salt: nil, info: info.data(using: .utf8)!.bytes, keyLength: 16).calculate()
+        dailyKeys[day] = key
+        return key
     }
 
-
-    public func rollingProximityIdentifier(day: Int, tin: UInt) throws -> RollingProximityIdentifier {
+    public func rollingProximityIdentifier(day: Int, tin: Int) throws -> RollingProximityIdentifier {
         let str = "CT-RPI\(tin)"
-        let hash = try HMAC(key: dailyTracingKey(day: day).calculate(), variant: .sha256).authenticate(str.data(using: .utf8)!.bytes)
+        let hash = try HMAC(key: dailyTracingKey(day: day), variant: .sha256).authenticate(str.data(using: .utf8)!.bytes)
         if hash.count < 16 {
             throw Error.invalidRollingProximityKey
         }
         return RollingProximityIdentifier(id: Array(hash[0..<16]))
+    }
+
+    public func check(suspiciousTokens: Set<RollingProximityIdentifier>,
+                      discoveredTokens: Set<RollingProximityIdentifier>) -> [RollingProximityIdentifier] {
+        var found = [RollingProximityIdentifier]()
+        for token in suspiciousTokens {
+            if discoveredTokens.contains(token) {
+                found.append(token)
+            }
+        }
+        return found
     }
 }

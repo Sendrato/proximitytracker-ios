@@ -15,14 +15,22 @@ class MainViewModel {
 
     var tracking: Property<Bool>
 
+    var status: Property<String>
+    
     init() {
         let tracker = Tracker.main
         joinAction = Action(execute: { _ in
-            tracker.join()
+            if tracker.joined.value {
+                tracker.unjoin()
+            } else {
+                tracker.join()
+            }
+
             return .empty
         })
 
         tracking = Property(tracker.tracking)
+        status = Property(tracker.status)
     }
 
 }
