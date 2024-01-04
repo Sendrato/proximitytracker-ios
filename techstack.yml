@@ -1,11 +1,12 @@
 repo_name: Sendrato/proximitytracker-ios
 report_id: 862e5aa704d178bb1766610d40f2949b
+version: 0.1
 repo_type: Public
-timestamp: '2023-11-09T15:18:31+00:00'
+timestamp: '2024-01-04T14:59:09+00:00'
 requested_by: jrtaal
 provider: github
 branch: master
-detected_tools_count: 9
+detected_tools_count: 10
 tools:
 - name: Objective-C
   description: The primary programming language you use when writing software for
@@ -16,6 +17,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/1008/xcode.png
+  detection_source_url: https://github.com/Sendrato/proximitytracker-ios
   detection_source: Repo Metadata
 - name: Ruby
   description: A dynamic, interpreted, open source programming language with a focus
@@ -26,6 +28,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/989/ruby.png
+  detection_source_url: https://github.com/Sendrato/proximitytracker-ios
   detection_source: Repo Metadata
 - name: Swift
   description: 'An innovative new programming language for Cocoa and Cocoa Touch. '
@@ -36,6 +39,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/1009/tuHsaI2U.png
+  detection_source_url: https://github.com/Sendrato/proximitytracker-ios
   detection_source: Repo Metadata
 - name: Git
   description: Fast, scalable, distributed revision control system
@@ -45,6 +49,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Version Control System
   image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source_url: https://github.com/Sendrato/proximitytracker-ios
   detection_source: Repo Metadata
 - name: RubyGems
   description: Easily download, install, and use ruby software packages on your system
@@ -54,6 +59,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Package Managers
   image_url: https://img.stackshare.io/service/12795/5jL6-BA5_400x400.jpeg
+  detection_source_url: https://github.com/Sendrato/proximitytracker-ios/blob/master/Gemfile
   detection_source: Gemfile
   last_updated_by: Jacco Taal
   last_updated_on: 2020-04-13 13:23:36.000000000 Z
@@ -66,8 +72,8 @@ tools:
   category: Libraries
   sub_category: CocoaPods Packages
   image_url: https://img.stackshare.io/service/2426/e1cbdef9d4b11484049a033886578e54_400x400.png
-  detection_source_url: Gemfile.lock
-  detection_source: Podfile.lock
+  detection_source_url: https://github.com/Sendrato/proximitytracker-ios/blob/master/Gemfile.lock
+  detection_source: Gemfile
   last_updated_by: Jacco Taal
   last_updated_on: 2020-04-13 13:23:36.000000000 Z
 - name: ReactiveCocoa
@@ -76,6 +82,7 @@ tools:
   open_source: false
   hosted_saas: false
   image_url: https://img.stackshare.io/service/2191/3422977.png
+  detection_source_url: https://github.com/Sendrato/proximitytracker-ios/blob/master/Podfile
   detection_source: Podfile
   last_updated_by: Jacco Taal
   last_updated_on: 2020-04-13 13:23:36.000000000 Z
@@ -89,10 +96,24 @@ tools:
   category: Libraries
   sub_category: CocoaPods Packages
   image_url: https://img.stackshare.io/package/cocoapods/image.png
-  detection_source_url: Podfile.lock
+  detection_source_url: https://github.com/Sendrato/proximitytracker-ios/blob/master/Podfile.lock
   detection_source: Podfile
   last_updated_by: Jacco Taal
   last_updated_on: 2020-04-15 09:00:51.000000000 Z
+- name: ReactiveCocoa
+  description: Streams of values over time
+  package_url: https://cocoapods.org/pods/ReactiveCocoa
+  version: 10.2.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: CocoaPods Packages
+  image_url: https://img.stackshare.io/package/cocoapods/image.png
+  detection_source_url: https://github.com/Sendrato/proximitytracker-ios/blob/master/Podfile.lock
+  detection_source: Podfile
+  last_updated_by: Jacco Taal
+  last_updated_on: 2020-04-13 13:23:36.000000000 Z
 - name: cocoapods
   description: CocoaPods manages library dependencies for your Xcode project
   package_url: https://rubygems.org/cocoapods
@@ -103,7 +124,7 @@ tools:
   category: Libraries
   sub_category: RubyGems Packages
   image_url: https://img.stackshare.io/package/19189/default_2266a6c0e2693d55b1999a7c5db4be13e5720232.png
-  detection_source_url: Gemfile.lock
+  detection_source_url: https://github.com/Sendrato/proximitytracker-ios/blob/master/Gemfile.lock
   detection_source: Gemfile
   last_updated_by: Jacco Taal
   last_updated_on: 2020-04-13 13:23:36.000000000 Z
