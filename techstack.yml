@@ -2,7 +2,7 @@ repo_name: Sendrato/proximitytracker-ios
 report_id: 862e5aa704d178bb1766610d40f2949b
 version: 0.1
 repo_type: Public
-timestamp: '2024-01-05T09:21:43+00:00'
+timestamp: '2024-02-29T18:06:57+00:00'
 requested_by: jrtaal
 provider: github
 branch: master
@@ -31,7 +31,7 @@ tools:
   detection_source_url: https://github.com/Sendrato/proximitytracker-ios
   detection_source: Repo Metadata
 - name: Swift
-  description: 'An innovative new programming language for Cocoa and Cocoa Touch. '
+  description: An innovative new programming language for Cocoa and Cocoa Touch.
   website_url: https://developer.apple.com/swift/
   license: Apache-2.0
   open_source: true
